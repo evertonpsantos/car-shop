@@ -7,7 +7,6 @@ export default class CarODM {
 
   constructor() {
     this.schema = new Schema({
-      id: { type: String },
       model: { type: String, required: true },
       year: { type: Number, required: true },
       color: { type: String, required: true },

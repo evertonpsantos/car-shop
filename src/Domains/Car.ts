@@ -1,89 +1,73 @@
 import ICar from '../Interfaces/ICar';
 
 class Car {
-  private _id: string;
-  private _model: string;
-  private _year: number;
-  private _color: string;
-  private _status: boolean;
-  private _buyValue: number;
-  private _doorsQty: number;
-  private _seatsQty: number;
+  protected id: string;
+  protected model: string;
+  protected year: number;
+  protected color: string;
+  protected status: boolean;
+  protected buyValue: number;
+  private doorsQty: number;
+  private seatsQty: number;
 
   constructor(newCar: ICar) {
-    this._id = newCar.id;
-    this._model = newCar.model;
-    this._year = newCar.year;
-    this._color = newCar.color;
-    this._status = newCar.status || false;
-    this._buyValue = newCar.buyValue;
-    this._doorsQty = newCar.doorsQty;
-    this._seatsQty = newCar.seatsQty;
+    this.id = newCar.id || '';
+    this.model = newCar.model;
+    this.year = newCar.year;
+    this.color = newCar.color;
+    this.status = newCar.status || false;
+    this.buyValue = newCar.buyValue;
+    this.doorsQty = newCar.doorsQty;
+    this.seatsQty = newCar.seatsQty;
   }
 
-  set id(id: string) {
-    this._id = id;
-  }
+  // set id(id: string) {
+  //   this._id = id;
+  // }
 
-  get id() {
-    return this._id;
-  }
+  // get id() {
+  //   return this._id;
+  // }
 
-  set model(model: string) {
-    this._model = model;
-  }
+  // set model(model: string) {
+  //   this._model = model;
+  // }
 
-  get model() {
-    return this._model;
-  }
+  // get model() {
+  //   return this._model;
+  // }
 
-  set year(year: number) {
-    this._year = year;
-  }
+  // set year(year: number) {
+  //   this._year = year;
+  // }
 
-  get year() {
-    return this._year;
-  }
+  // get year() {
+  //   return this._year;
+  // }
 
-  set color(color: string) {
-    this._color = color;
-  }
+  // set color(color: string) {
+  //   this._color = color;
+  // }
 
-  get color() {
-    return this._color;
-  }
+  // get color() {
+  //   return this._color;
+  // }
 
-  set status(status: boolean) {
-    this._status = status;
-  }
+  // set status(status: boolean) {
+  //   this._status = status;
+  // }
 
-  get status() {
-    return this._status;
-  }
+  // get status() {
+  //   return this._status;
+  // }
 
-  set buyValue(buyValue: number) {
-    this._buyValue = buyValue;
-  }
+  // set buyValue(buyValue: number) {
+  //   this._buyValue = buyValue;
+  // }
 
-  get buyValue() {
-    return this._buyValue;
-  }
-
-  set doorsQty(doorsQty: number) {
-    this._doorsQty = doorsQty;
-  }
-
-  get doorsQty() {
-    return this._doorsQty;
-  }
-
-  set seatsQty(seatsQty: number) {
-    this._seatsQty = seatsQty;
-  }
-
-  get seatsQty() {
-    return this._seatsQty;
-  }
+  // get buyValue() {
+  //   return this._buyValue;
+  // }
 }
 
 export default Car;
