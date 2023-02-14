@@ -14,6 +14,12 @@ export default class CarODM {
       buyValue: { type: Number, required: true },
       doorsQty: { type: Number, required: true },
       seatsQty: { type: Number, required: true },
+    }, {
+      toJSON: { 
+        virtuals: true, 
+        versionKey: false,
+      },
+      toObject: { virtuals: true },
     });
 
     this.model = models.Car || model('Car', this.schema);

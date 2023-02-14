@@ -9,7 +9,7 @@ export default class CarService {
     return new Car(newCarRegistered);
   }
 
-  public async getAllCars() {
+  public async getAllCars(): Promise<ICar[]> {
     const carODM = new CarODM();
     const newCarRegistered = await carODM.getAllCars();
     return newCarRegistered;
