@@ -8,4 +8,10 @@ export default class CarService {
     const newCarRegistered = await carODM.registerNewCar(newCar);
     return new Car(newCarRegistered);
   }
+
+  public async getAllCars() {
+    const carODM = new CarODM();
+    const newCarRegistered = await carODM.getAllCars();
+    return newCarRegistered;
+  }
 }
