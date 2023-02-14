@@ -32,4 +32,8 @@ export default class CarODM {
   public async getCarById(id: string) {
     return this.model.findOne({ _id: id });
   }
+
+  public editCar(id: string, newInfo: Omit<ICar, 'id'>) {
+    return this.model.findByIdAndUpdate({ _id: id }, { ...newInfo }, { new: true });
+  }
 }

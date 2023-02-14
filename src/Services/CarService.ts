@@ -24,4 +24,12 @@ export default class CarService {
     if (foundCar) return new Car(foundCar);
     return null;
   }
+
+  public async editCar(id: string, newInfo: Omit<ICar, 'id'>) {
+    if (!isValidObjectId(id)) throw Error('Invalid mongo id');
+    const carODM = new CarODM();
+    const foundCar = await carODM.editCar(id, newInfo);
+    if (foundCar) return new Car(foundCar);
+    return null;
+  }
 }

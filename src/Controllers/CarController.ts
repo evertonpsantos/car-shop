@@ -37,4 +37,19 @@ export default class CarController {
       }
     }
   };
+
+  public editCar = async () => {
+    const { id } = this.req.params;
+    const newInfoReq = this.req.body;
+
+    try {
+      const result = await this._service.editCar(id, newInfoReq);
+      if (!result) return this.res.status(404).json({ message: 'Car not found' });
+      return this.res.status(200).json(result);
+    } catch (error) {
+      if ((error as Error).message === 'Invalid mongo id') {
+        return this.res.status(422).json({ message: (error as Error).message });
+      }
+    }
+  };
 }
