@@ -22,4 +22,8 @@ export default class CarODM {
   public async registerNewCar(newCar: Omit<ICar, 'id'>): Promise<ICar> {
     return this.model.create({ ...newCar });
   }
+
+  public async getCarList(): Promise<ICar[]> {
+    return this.model.find({});
+  }
 }
