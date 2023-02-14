@@ -15,11 +15,7 @@ export default class CarODM {
       doorsQty: { type: Number, required: true },
       seatsQty: { type: Number, required: true },
     }, {
-      toJSON: { 
-        virtuals: true, 
-        versionKey: false,
-      },
-      toObject: { virtuals: true },
+      toJSON: { virtuals: true, versionKey: false },
     });
 
     this.model = models.Car || model('Car', this.schema);
@@ -31,5 +27,9 @@ export default class CarODM {
 
   public async getAllCars(): Promise<ICar[]> {
     return this.model.find({});
+  }
+
+  public async getCarById(id: string) {
+    return this.model.findOne({ _id: id });
   }
 }
