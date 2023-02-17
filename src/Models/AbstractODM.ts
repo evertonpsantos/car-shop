@@ -24,6 +24,10 @@ abstract class AbstractODM<T> {
   public edit(id: string, newInfo: Omit<T, 'id'>) {
     return this.model.findByIdAndUpdate({ _id: id }, { ...newInfo }, { new: true });
   }
+
+  public deleteById(id: string) {
+    return this.model.findByIdAndDelete({ _id: id });
+  }
 }
 
 export default AbstractODM;

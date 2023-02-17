@@ -4,6 +4,7 @@ import MotoService from '../Services/MotoService';
 
 export default class MotoController {
   private _service: MotoService;
+  private notFoundMsg = 'Motorcycle not found';
 
   constructor(
     private req: Request, 
@@ -29,12 +30,10 @@ export default class MotoController {
 
     try {
       const result = await this._service.getBikeById(id);
-      if (!result) return this.res.status(404).json({ message: 'Motorcycle not found' });
+      if (!result) return this.res.status(404).json({ message: this.notFoundMsg });
       return this.res.status(200).json(result);
     } catch (error) {
-      if ((error as Error).message === 'Invalid mongo id') {
-        return this.res.status(422).json({ message: (error as Error).message });
-      }
+      return this.res.status(422).json({ message: (error as Error).message });
     }
   };
 
@@ -44,12 +43,22 @@ export default class MotoController {
 
     try {
       const result = await this._service.editBike(id, newInfoReq);
-      if (!result) return this.res.status(404).json({ message: 'Motorcycle not found' });
+      if (!result) return this.res.status(404).json({ message: this.notFoundMsg });
       return this.res.status(200).json(result);
     } catch (error) {
-      if ((error as Error).message === 'Invalid mongo id') {
-        return this.res.status(422).json({ message: (error as Error).message });
-      }
+      return this.res.status(422).json({ message: (error as Error).message });
+    }
+  };
+
+  public removeBike = async () => {
+    const { id } = this.req.params;
+
+    try {
+      const result = await this._service.deleteBike(id);
+      if (!result) return this.res.status(404).json({ message: this.notFoundMsg });
+      return this.res.status(204).json({ result });
+    } catch (error) {
+      return this.res.status(422).json({ message: (error as Error).message });
     }
   };
 }

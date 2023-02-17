@@ -4,6 +4,8 @@ import ICar from '../Interfaces/ICar';
 import CarODM from '../Models/CarODM';
 
 export default class CarService {
+  private invalidIdMsg = 'Invalid mongo id';
+
   public async registerNewCar(newCar: Omit<ICar, 'id'>) {
     const carODM = new CarODM();
     const newCarRegistered = await carODM.register(newCar);
@@ -18,7 +20,7 @@ export default class CarService {
   }
 
   public async getCarById(id: string) {
-    if (!isValidObjectId(id)) throw Error('Invalid mongo id');
+    if (!isValidObjectId(id)) throw Error(this.invalidIdMsg);
     const carODM = new CarODM();
     const foundCar = await carODM.getById(id);
     if (foundCar) return new Car(foundCar);
@@ -26,10 +28,21 @@ export default class CarService {
   }
 
   public async editCar(id: string, newInfo: Omit<ICar, 'id'>) {
-    if (!isValidObjectId(id)) throw Error('Invalid mongo id');
+    if (!isValidObjectId(id)) throw Error(this.invalidIdMsg);
     const carODM = new CarODM();
     const foundCar = await carODM.edit(id, newInfo);
     if (foundCar) return new Car(foundCar);
     return null;
+  }
+
+  public async deleteCar(id: string) {
+    if (!isValidObjectId(id)) throw Error(this.invalidIdMsg);
+    const carODM = new CarODM();
+    try {
+      const result = await carODM.deleteById(id);
+      return result;
+    } catch (error) {
+      return null;
+    }
   }
 }

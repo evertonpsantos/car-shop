@@ -4,6 +4,8 @@ import IMotorcycle from '../Interfaces/IMotorcycle';
 import MotorcycleODM from '../Models/MotorcycleODM';
 
 export default class MotoService {
+  private invalidIdMsg = 'Invalid mongo id';
+
   public async registerNewBike(newBike: Omit<IMotorcycle, 'id'>) {
     const motoODM = new MotorcycleODM();
     const newBikeRegistered = await motoODM.register(newBike);
@@ -18,7 +20,7 @@ export default class MotoService {
   }
 
   public async getBikeById(id: string) {
-    if (!isValidObjectId(id)) throw Error('Invalid mongo id');
+    if (!isValidObjectId(id)) throw Error(this.invalidIdMsg);
     const bikeODM = new MotorcycleODM();
     const foundBike = await bikeODM.getById(id);
     if (foundBike) return new Motorcycle(foundBike);
@@ -26,10 +28,21 @@ export default class MotoService {
   }
 
   public async editBike(id: string, newInfo: Omit<IMotorcycle, 'id'>) {
-    if (!isValidObjectId(id)) throw Error('Invalid mongo id');
+    if (!isValidObjectId(id)) throw Error(this.invalidIdMsg);
     const bikeODM = new MotorcycleODM();
     const foundBike = await bikeODM.edit(id, newInfo);
     if (foundBike) return new Motorcycle(foundBike);
     return null;
+  }
+
+  public async deleteBike(id: string) {
+    if (!isValidObjectId(id)) throw Error(this.invalidIdMsg);
+    const bikeODM = new MotorcycleODM();
+    try {
+      const result = await bikeODM.deleteById(id);
+      return result;
+    } catch (error) {
+      return null;
+    }
   }
 }
