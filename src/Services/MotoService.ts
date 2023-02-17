@@ -33,9 +33,8 @@ export default class MotoService {
     if (await this.checkIdInDatabase(id) === false) throw new ErrorCreator(this.notFoundMsg, 404);
 
     const bikeODM = new MotorcycleODM();
-    const foundBike = await bikeODM.getById(id);
-    if (foundBike) return new Motorcycle(foundBike);
-    return null;
+    const foundBike = await bikeODM.getById(id) as IMotorcycle;
+    return new Motorcycle(foundBike);
   }
 
   public async editBike(id: string, newInfo: Omit<IMotorcycle, 'id'>) {
@@ -43,9 +42,8 @@ export default class MotoService {
     if (await this.checkIdInDatabase(id) === false) throw new ErrorCreator(this.notFoundMsg, 404);
 
     const bikeODM = new MotorcycleODM();
-    const foundBike = await bikeODM.edit(id, newInfo);
-    if (foundBike) return new Motorcycle(foundBike);
-    return null;
+    const foundBike = await bikeODM.edit(id, newInfo) as IMotorcycle;
+    return new Motorcycle(foundBike);
   }
 
   public async deleteBike(id: string) {
