@@ -6,6 +6,9 @@ import { carList, newCarRegisteredMock,
   newCarRequestMock, updateCarRequestMock, updatedCarMock } from './mocks/carService.mocks';
 
 describe('It should test Car service layer', function () {
+  const invalidIdMsg = 'Invalid mongo id';
+  const notFoundMsg = 'Car not found';
+
   afterEach(function () {
     sinon.restore();
   });
@@ -22,6 +25,10 @@ describe('It should test Car service layer', function () {
   });
 
   describe('Tests getAllCars and getCarById', function () {
+    afterEach(function () {
+      sinon.restore();
+    });
+
     it('Tests if car list is returned', async function () {
       sinon.stub(Model, 'find').resolves(carList);
   
@@ -36,22 +43,27 @@ describe('It should test Car service layer', function () {
         const carService = new CarService();
         await carService.getCarById('123456qie'); 
       } catch (error) {
-        expect((error as Error).message).to.be.equal('Invalid mongo id');
+        expect((error as Error).message).to.be.equal(invalidIdMsg);
       }
     });
   
-    it('Tests if null is returned when no car is found', async function () {
-      sinon.stub(Model, 'findOne').resolves(null);
-      
-      const carService = new CarService();
-      const result = await carService.getCarById('6348513f34c397abcad040b3');
-  
-      expect(result).to.equal(null);
+    it('Tests if error is thrown is returned when no car is found', async function () {
+      sinon.stub(Model, 'findOne').onCall(0).resolves(null);
+
+      try {
+        const carService = new CarService();
+        await carService.getCarById('6348513f34c397abcad040b3');        
+      } catch (error) {
+        expect((error as Error).message).to.equal(notFoundMsg);
+      }
     });
 
     it('Tests if right car is returned', async function () {
-      sinon.stub(Model, 'findOne').resolves(updatedCarMock);
-      
+      sinon.stub(Model, 'findOne')
+        .onFirstCall().resolves(true)
+        .onSecondCall()
+        .resolves(updatedCarMock);
+
       const carService = new CarService();
       const result = await carService.getCarById('6348513f34c123abcad050b4');
   
@@ -60,25 +72,32 @@ describe('It should test Car service layer', function () {
   });
 
   describe('Tests editCar method', function () {
+    afterEach(function () {
+      sinon.restore();
+    });
+
     it('Should throw error when invalid id is passed', async function () {
       try {
         const carService = new CarService();
         await carService.editCar('123456qie', updateCarRequestMock); 
       } catch (error) {
-        expect((error as Error).message).to.be.equal('Invalid mongo id');
+        expect((error as Error).message).to.be.equal(invalidIdMsg);
       }
     });
 
-    it('Should return null when no car is found', async function () {
-      sinon.stub(Model, 'findOneAndUpdate').resolves(null);
-      
-      const carService = new CarService();
-      const result = await carService.editCar('6348513f34c397abcad040b3', updateCarRequestMock);
-  
-      expect(result).to.equal(null);
+    it('Should return error when no car is found', async function () {
+      sinon.stub(Model, 'findOne').resolves(null);
+
+      try {
+        const carService = new CarService();
+        await carService.editCar('6348513f34c397abcad040b3', updateCarRequestMock);
+      } catch (error) {
+        expect((error as Error).message).to.equal(notFoundMsg);
+      }
     });
 
     it('Should return updated car info', async function () {
+      sinon.stub(Model, 'findOne').resolves(true);
       sinon.stub(Model, 'findOneAndUpdate').resolves(updatedCarMock);
 
       const carService = new CarService();
@@ -89,33 +108,36 @@ describe('It should test Car service layer', function () {
   });
 
   describe('Tests deleteCar method', function () {
+    afterEach(function () {
+      sinon.restore();
+    });
+    
     it('Should throw error when invalid id is passed', async function () {
       try {
         const carService = new CarService();
         await carService.deleteCar('123456qie'); 
       } catch (error) {
-        expect((error as Error).message).to.be.equal('Invalid mongo id');
+        expect((error as Error).message).to.be.equal(invalidIdMsg);
       }
     });
 
     it('Should return null when no car is found', async function () {
-      sinon.stub(Model, 'findByIdAndDelete').resolves(null);
+      sinon.stub(Model, 'findOne').resolves(null);
 
       try {
         const carService = new CarService();
         await carService.deleteCar('6348513f34c397abcad040b3');
       } catch (error) {
-        expect((error as Error).message).to.equal(null);
+        expect((error as Error).message).to.equal(notFoundMsg);
       }
     });
 
     it('Should delete a car', async function () {
+      sinon.stub(Model, 'findOne').resolves(true);
       sinon.stub(Model, 'findByIdAndDelete').resolves(null);
       
       const carService = new CarService();
-      const result = await carService.deleteCar('6348513f34c397abcad040b4');
-  
-      expect(result).to.equal(null);
+      await carService.deleteCar('6348513f34c397abcad040b4');
     });
   });
 });
