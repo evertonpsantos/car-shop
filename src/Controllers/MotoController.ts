@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
+import ErrorCreator from '../Errors/ErrorCreator';
 import IMotorcycle from '../Interfaces/IMotorcycle';
 import MotoService from '../Services/MotoService';
 
 export default class MotoController {
   private _service: MotoService;
-  private notFoundMsg = 'Motorcycle not found';
 
   constructor(
     private req: Request, 
@@ -30,10 +30,10 @@ export default class MotoController {
 
     try {
       const result = await this._service.getBikeById(id);
-      if (!result) return this.res.status(404).json({ message: this.notFoundMsg });
       return this.res.status(200).json(result);
     } catch (error) {
-      return this.res.status(422).json({ message: (error as Error).message });
+      return this.res.status((error as ErrorCreator).statusCode)
+        .json({ message: (error as ErrorCreator).message });
     }
   };
 
@@ -43,10 +43,10 @@ export default class MotoController {
 
     try {
       const result = await this._service.editBike(id, newInfoReq);
-      if (!result) return this.res.status(404).json({ message: this.notFoundMsg });
       return this.res.status(200).json(result);
     } catch (error) {
-      return this.res.status(422).json({ message: (error as Error).message });
+      return this.res.status((error as ErrorCreator).statusCode)
+        .json({ message: (error as ErrorCreator).message });
     }
   };
 
@@ -54,11 +54,11 @@ export default class MotoController {
     const { id } = this.req.params;
 
     try {
-      const result = await this._service.deleteBike(id);
-      if (!result) return this.res.status(404).json({ message: this.notFoundMsg });
-      return this.res.status(204).json({ result });
+      await this._service.deleteBike(id);
+      return this.res.status(204);
     } catch (error) {
-      return this.res.status(422).json({ message: (error as Error).message });
+      return this.res.status((error as ErrorCreator).statusCode)
+        .json({ message: (error as ErrorCreator).message });
     }
   };
 }
