@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import ErrorCreator from '../Errors/ErrorCreator';
 import ICar from '../Interfaces/ICar';
 import CarService from '../Services/CarService';
 
@@ -30,12 +31,10 @@ export default class CarController {
 
     try {
       const result = await this._service.getCarById(id);
-      if (!result) return this.res.status(404).json({ message: this.notFoundMsg });
       return this.res.status(200).json(result);
     } catch (error) {
-      if ((error as Error).message === 'Invalid mongo id') {
-        return this.res.status(422).json({ message: (error as Error).message });
-      }
+      return this.res.status((error as ErrorCreator).statusCode)
+        .json({ message: (error as ErrorCreator).message });
     }
   };
 
@@ -45,12 +44,10 @@ export default class CarController {
 
     try {
       const result = await this._service.editCar(id, newInfoReq);
-      if (!result) return this.res.status(404).json({ message: this.notFoundMsg });
       return this.res.status(200).json(result);
     } catch (error) {
-      if ((error as Error).message === 'Invalid mongo id') {
-        return this.res.status(422).json({ message: (error as Error).message });
-      }
+      return this.res.status((error as ErrorCreator).statusCode)
+        .json({ message: (error as ErrorCreator).message });
     }
   };
 
@@ -59,10 +56,10 @@ export default class CarController {
 
     try {
       const result = await this._service.deleteCar(id);
-      if (!result) return this.res.status(404).json({ message: this.notFoundMsg });
       return this.res.status(204).json({ result });
     } catch (error) {
-      return this.res.status(422).json({ message: (error as Error).message });
+      return this.res.status((error as ErrorCreator).statusCode)
+        .json({ message: (error as ErrorCreator).message });
     }
   };
 }

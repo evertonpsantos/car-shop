@@ -60,7 +60,7 @@ describe('It should test Car service layer', function () {
   });
 
   describe('Tests editCar method', function () {
-    it('Should throw error when invalid is passed', async function () {
+    it('Should throw error when invalid id is passed', async function () {
       try {
         const carService = new CarService();
         await carService.editCar('123456qie', updateCarRequestMock); 
@@ -85,6 +85,37 @@ describe('It should test Car service layer', function () {
       const result = await carService.editCar('6348513f34c123abcad050b4', updateCarRequestMock);
 
       expect(result).to.be.deep.equal(updatedCarMock);
+    });
+  });
+
+  describe('Tests deleteCar method', function () {
+    it('Should throw error when invalid id is passed', async function () {
+      try {
+        const carService = new CarService();
+        await carService.deleteCar('123456qie'); 
+      } catch (error) {
+        expect((error as Error).message).to.be.equal('Invalid mongo id');
+      }
+    });
+
+    it('Should return null when no car is found', async function () {
+      sinon.stub(Model, 'findByIdAndDelete').resolves(null);
+
+      try {
+        const carService = new CarService();
+        await carService.deleteCar('6348513f34c397abcad040b3');
+      } catch (error) {
+        expect((error as Error).message).to.equal(null);
+      }
+    });
+
+    it('Should delete a car', async function () {
+      sinon.stub(Model, 'findByIdAndDelete').resolves(null);
+      
+      const carService = new CarService();
+      const result = await carService.deleteCar('6348513f34c397abcad040b4');
+  
+      expect(result).to.equal(null);
     });
   });
 });
